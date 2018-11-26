@@ -1,0 +1,23 @@
+.yellow .leaflet-popup-tip,
+.yellow .leaflet-popup-content-wrapper {
+    background: #ffffb3;
+    color: #000000;
+}
+
+.green .leaflet-popup-tip,
+.green .leaflet-popup-content-wrapper {
+    background: #cefdce;
+    color: #000000;
+}
+
+.blue .leaflet-popup-tip,
+.blue .leaflet-popup-content-wrapper {
+    background: #c6e8f0;
+    color: #000000;
+}
+
+.red .leaflet-popup-tip,
+.red .leaflet-popup-content-wrapper {
+    background: #FFA293;
+    color: #000000;
+}

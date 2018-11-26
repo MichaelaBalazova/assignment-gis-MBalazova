@@ -18,10 +18,8 @@ Build a map-based application, which lets the user see geo-based data on a map a
 
 ## My project
 
-Fill in (either in English, or in Slovak):
+**Application description**: Aplikácia pre vyhľadávanie kaviarní v Londýne
 
-**Application description**: `<fill in>`
+**Data source**: `open street maps`
 
-**Data source**: `<fill in>`
-
-**Technologies used**: `<fill in>`
+**Technologies used**: `python, flask, javascript, jquery, bootstrap, leaflet, mapbox`

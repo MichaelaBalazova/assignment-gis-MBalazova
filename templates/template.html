@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>Gimme a coffee</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="/static/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA+vr6ABk1XgDW1tYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMzAAAAAAAxEREwAAAAAxERERMzAAAxEREREREwADERERERMRMAMRERERExEwAxEiIiETETADEiIiIhETAAAxERERMzAAAAMzMzMAAAAAAAAAAAAAAAAAAAIgAAAAAAAAIAAAAAAAAAACAAAAAAAAAAAgAAAAAAAAAgAAAADwfwAA4D8AAMAHAACAAwAAgAEAAIABAACAAQAAgAMAAMAHAADgPwAA//8AAP5/AAD9/wAA/v8AAP9/AAD+/wAA" rel="icon" type="image/x-icon" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-9">
+              <div id="map" style="height: 600px;"></div>
+            </div>
+            <div class="col-md-3">
+                <br><br>
+
+                <!-- heading -->
+                <nav class="navbar navbar-light bg-light">
+                  <span class="navbar-brand mb-0 h1">Cafes in London</span>
+                </nav>
+
+                <br>
+
+                <!--show all cafes on the map-->
+                <button class="btn btn-primary btn-lg" id="allCafes">Show all cafes on the map</button>
+
+                <br><br>
+
+                <!--showing one closest cafe to the actual position and also distance to it-->
+                <button class="btn btn-primary btn-lg" id="findOneClosestCafe">Find closest cafe to position</button>
+
+                <br><br><br>
+
+                <!--search cafes by distance and location-->
+                <div class="row">
+                    <div class="input-group col-lg-10">
+                        <h4><span class="label label-info">Search by distance</span></h4><br>
+                    </div>
+                    <div class="input-group col-lg-10">
+                        <label for="dist">Distance in metres:</label>
+                    </div>
+                    <div class="input-group col-lg-6">
+                        <br>
+                        <input type="text" value="1000" class="form-control" id="dist" aria-describedby="helpDistance">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="findClosestCafes">Nearest cafes</button>
+                        </span>
+                    </div>
+                    <div class="input-group col-lg-12">
+                        <p id="helpDistance" class="form-text text-muted">
+                          Click on the map on your position and adjust distance
+                        </p>
+                    </div>
+                </div>
+
+                <br>
+
+                <!--showing road on click and nearest cafes-->
+                <button class="btn btn-primary btn-lg" id="findRoadAndCafes">Find street and cafes on it</button>
+
+                <br><br>
+
+                <!--show all shopping malls and cafes in them, intersects -->
+                <button class="btn btn-primary btn-lg" id="allShoppingMalls">Show all shopping malls and cafes</button>
+
+            </div>
+        </div>
+    </div>
+    <script src="/static/leaflet.js"></script>
+  </body>
+</html>
