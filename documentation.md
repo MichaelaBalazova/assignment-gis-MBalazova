@@ -10,9 +10,20 @@
 
 Pre svoju aplikáciu som si vybrala vyhľadávanie kaviarní vo veľkom meste, ako je Londýn. Na mape si vieme zobraziť aj všetky kaviarne spolu s ich názvom alebo si viem kaviarne rôzne filtrovať podľa nižšie popísaných scenárov.
 
+### Frontend 
+
+Frontendová aplikácia zobrazuje statickú HTML stránku `template.html`, ktorej štýl je definovaný bootstrap-om a externým súborom `style.css`. 
+
+Pre lepší vzhľad mapy a viditeľnejšie kaviarne (názov kaviarne a ikona) som použila ```mapbox``` vrstvu, ktorá zvýraznila na základe podmienky požadované zariadenia. Keďže sa jedná o veľmi dynamické odvetvie (zánik a vznik kaviarní je úplne bežný), tak dáta nie sú v každom prípade konzistentné. Tento fakt prisudzujeme neaktuálnosti datasetu. 
+Vzhľad mapy som si upravila na `light` a tiež som si zmenila napr. farby parkov alebo riek, vodných plôch.
+
+### Backend 
+
+Backendová aplikácia je napísaná vo framework-u Flask a jazyku Python. Táto časť je zodpovedná za všetky dopyty z geo databázy.
+
 ### Opis scenárov + príklady query
 
-#### Scenár 1
+#### Scenár 1 - nákupné centrá
 
 Zobrazenie všetkých nákupných centier v Londýne a kaviarne, ktoré sa v týchto centrách nachádzajú. V detaile nákupného centra je zobrazená aj plocha budovy.
 
@@ -21,6 +32,8 @@ Na začiatku som si vybrala všetky nákupné centrá a všetky kaviarne. V druh
 V detaile nákupného centra zobrazujem aj jeho plochu v metroch štvrcových, čo umožňuje funkcia `ST_Area`.
 
 použité postgis funkcie : `ST_Intersects, ST_Area`
+
+**API** : `GET /allShoppingMalls`
 
 príprava:
 ```sql
@@ -44,13 +57,15 @@ select 'FeatureCollection' as type, array_to_json(array_agg(attr)) as features f
 as attr; 
 ```
 
-#### Scenár 2
+#### Scenár 2 - najbližšia kaviareň
 
 Nájdenie jednej najbližšej kaviarne k aktuálnej polohe na mape.
 
 V tomto dopyte som si zistila vzdialenosť od bodu na mape ku každej kaviarni, následne som si tieto dáta zoradila od najmenšej vzdialenosti, ktorú som nakoniec zobrazila aj na mape ako najbližšiu kaviareň (v detaile zobrazujem aj konkrétnu vzdialenosť v metroch).
 
 použité postgis funkcie : `ST_Distance`
+
+**API** : `GET /findOneClosestCafe/LatLng(51.5617,%20-0.03543)`
 
 SQL:
 ```sql
@@ -63,7 +78,7 @@ select 'FeatureCollection' as type, array_to_json(array_agg(attr)) as features f
 as attr ; 
 ```
 
-#### Scenár 3
+#### Scenár 3 - okruh kaviarní
 
 Nájdenie najbližších kaviarní v okruhu x metrov od určenej polohy na mape. Používateľ si môže zvoliť požadovanú vzdialenosť v metroch.
 
@@ -72,6 +87,8 @@ Pomocou funkcie `ST_DWithin` si zobrazujem kaviarne, ktoré sú v okruhu x metro
 Na základe dokumentácie PostGis je funkcia `ST_DWithin` efektívnejšia ako `ST_Distance` od verzie 1.3.4.
 
 použité postgis funkcie : `ST_DWithin, ST_Distance`
+
+**API** : `GET /findClosestCafes/LatLng(51.52336,%20-0.14255)/1000`
 
 SQL:
 ```sql
@@ -86,7 +103,7 @@ select 'FeatureCollection' as type, array_to_json(array_agg(attr)) as features f
 as attr ;
 ```
 
-#### Scenár 4
+#### Scenár 4 - kaviarne na jednej ulici
 
 Zobrazenie ulice na základe zadanej polohy na mape a kaviarní, ktoré sa na tejto ulici nachádzajú. V detaile ulice môžeme vidieť aj jej celkovú dĺžku.
 
@@ -97,6 +114,8 @@ V ďalšom kroku som zobrazila kaviarne, ktoré boli vo veľmi blízkej vzdialen
 V poslednom kroku mojim cieľom bolo zistiť celkovú dĺžku ulice. V tomto prípade som znova musela ísť na to čiastkovo a zistiť si dĺžku pre každú časť ulice (`ST_Length`) a následne ich spolu sčítať. 
 
 použité postgis funkcie : `ST_Length, ST_DWithin, ST_Distance`
+
+**API** : `GET /findRoadAndCafes/LatLng(51.52336,%20-0.09174)`
 
 príprava:
 ```sql
@@ -132,11 +151,27 @@ select 'FeatureCollection' as type, array_to_json(array_agg(attr)) as features f
 as attr; 
 ```
 
-### Informácie o dátach v databáze, indexy
+##### Príklad odpovede
+
+JSON:
+```json
+[
+    {"type": "FeatureCollection", 
+        "features": [
+            {"type": "Feature", 
+            "geometry": {
+                "type": "Point", 
+                "coordinates": [-0.0466213, 51.5570747991651]}, 
+                "properties": {"f1": "Cooper & Wolf", "f2": 931.21915733}
+            }
+        ]
+    }
+]
+```
+
+### Informácie o dátach v databáze, indexy 
 
 Vo svojom projekte som pracovala s dátami z ```open street maps```, konkrétne som si vybrala mesto Londýn (hľadiac na hustotu kaviarní a veľkosť plochy). Na tejto ploche sa nachádzalo viac ako 2700 kaviarní.
-
-Pre lepší vzhľad mapy a viditeľnejšie kaviarne (názov kaviarne a ikona) som použila ```mapbox``` vrstvu, ktorá zvýraznila na základe podmienky požadované zariadenia. Keďže sa jedná o veľmi dynamické odvetvie (zánik a vznik kaviarní je úplne bežný), tak dáta nie sú v každom prípade konzistentné. Tento fakt prisudzujeme neaktuálnosti datasetu. 
 
 Pri vytváraní indexov som sledovala ako vytvorené indexy pomohli dopytu, čo sa týka či už časového hľadiska zo strany používateľa alebo pomocou príkazu ```EXPLAIN SELECT ...```
 
